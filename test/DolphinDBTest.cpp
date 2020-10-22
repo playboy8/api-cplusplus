@@ -359,8 +359,9 @@ TableSP createDemoTable(){
 void testDiskTable(){
     TableSP table = createDemoTable();
     conn.upload("mt",table);
+    string dbPath = conn.run("getHomeDir()+\"/cpp_test\" ")->getString();
     string script;
-    script += "dbPath= \"/home/swang/mytest/Demo2DB\";";
+    script += "dbPath;";
     script += "if(existsDatabase(dbPath)){dropDatabase(dbPath)};";
     script += "db=database(dbPath,VALUE,2010.01.01..2010.01.30);";
     script += "tDiskGlobal=db.createPartitionedTable(mt,`tDiskGlobal,`date);";
@@ -642,8 +643,9 @@ void testInt128vectorHash(){
 
 
 void testshare(){
+    string dbPath = conn.run(" getHomeDir()+\"/cpp_test\"")->getString();
     string script;
-    script += "TickDB = database(\"/home/swang/mytest/shareEx\", RANGE, `A`M`ZZZZ, `DFS_NODE1`DFS_NODE2);";
+    script += "TickDB = database(dbPath, RANGE, `A`M`ZZZZ, `DFS_NODE1`DFS_NODE2);";
     script += "t=table(rand(`AAPL`IBM`C`F,100) as sym, rand(1..10, 100) as qty, rand(10.25 10.5 10.75, 100) as price);";
     script += "share t as TickDB.Trades on sym;";
     //script += "dropTable(TickDB,`TickDB.Trades);";

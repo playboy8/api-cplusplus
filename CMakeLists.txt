@@ -20,10 +20,15 @@ set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS} -O3")
 if (WIN32)
     link_directories(${API_SRC}/bin/mingw_x64)
 elseif(UNIX)
-    link_directories(${API_SRC}/bin/linux_x64/ABI0)
+    link_directories(${API_SRC}/bin/linux_x64)
 endif ()
 include_directories(${API_SRC}/include)
 
+if (EXISTS "/usr/lib/libssl.so.1.0.0") # archlinux
+    set(LIBSSL /usr/lib/libssl.so.1.0.0)
+else ()
+    set(LIBSSL ssl)
+endif ()
 
 if (WIN32)
     set(platform_lib "ws2_32")
@@ -33,7 +38,7 @@ endif ()
 
 #===============================================================
 macro(TEST module)
-    add_executable(${module} ${API_SRC}/test/${module}.cpp)
+    add_executable(${module} ${API_SRC}/test/Streaming${module}.cpp)
     target_link_libraries(${module} 
         DolphinDBAPI 
         ${platform_lib} 
@@ -41,9 +46,7 @@ macro(TEST module)
         uuid)
 endmacro()
 
+TEST(PollingClientTester)
+TEST(ThreadedClientTester)
+TEST(ThreadPooledClientTester)
 
-TEST(StreamingPollingClientTester)
-TEST(StreamingThreadedClientTester)
-TEST(StreamingThreadPooledClientTester)
-TEST(DolphinDBTest)
-#TEST(StreamingThreadedClientTester)
