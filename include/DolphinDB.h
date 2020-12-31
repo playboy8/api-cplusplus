@@ -683,7 +683,7 @@ private:
     DBConnection& operator=(DBConnection& oth); // = delete
 
 private:
-    void switchDataNode(IOException& e);
+    void switchDataNode(const string& err);
     bool connected();
 
 private:
