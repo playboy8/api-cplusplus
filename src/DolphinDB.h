@@ -698,7 +698,7 @@ private:
     ConstantSP nodes_;
 };
 
-class BlockReader : public Constant{
+class EXPORT_DECL BlockReader : public Constant{
 public:
     BlockReader(const DataInputStreamSP& in );
     ConstantSP read();
