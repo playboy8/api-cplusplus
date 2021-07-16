@@ -702,7 +702,7 @@ class BlockReader : public Constant{
 public:
     BlockReader(const DataInputStreamSP& in );
     ConstantSP read();
-    void skillAll();
+    void skipAll();
     bool hasNext() const {return currentIndex_ < total_;}
     virtual DATA_TYPE getType() const {return DT_ANY;}
     virtual DATA_TYPE getRawType() const {return DT_ANY;}

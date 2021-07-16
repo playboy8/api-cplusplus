@@ -16,6 +16,7 @@ void ASSERTION(const string& test, const T& ret, const T& expect) {
         fail++;
     }
     else    
+        std::cout<<"ASSERT PASSED--" << test<< std::endl;
         pass++;
 }
 
@@ -1038,7 +1039,7 @@ void test_block_skipALL(){
     script += R"(select * from loadTable("dfs://TEST_BLOCK","pt");)";
     BlockReaderSP reader = conn.run(script,4,2,8200);
     ConstantSP t = reader->read();
-    reader->skillAll();
+    reader->skipAll();
     TableSP result = conn.run("table(1..100 as id1)");
     //cout<<result->getString()<<endl;
     ASSERTION("test_block_skipALL",result->size(),100);
