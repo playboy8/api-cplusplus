@@ -16,9 +16,9 @@ SmartPointer<BoundedBlockingQueue<TableSP>> tableQueue[MAX_THREAD_NUM];
 
 struct parameter {
   int index;
-  int count;
-  long cLong;
-  long nLong;
+  int count;  // thread
+  long cLong;  // records number per threads 
+  long nLong;  // batch
   long nTime;
 };
 
@@ -105,6 +105,8 @@ void *writeData(void *arg) {
   }
   printf("Thread %d,insert %ld rows %ld times, used %ld ms.\n", pParam->index,
          pParam->cLong, pParam->nLong, pParam->nTime);
+
+ //   printf("  writeData Thread  exit ! \n" );
   return NULL;
 }
 void *genData(void *arg) {
@@ -115,6 +117,8 @@ void *genData(void *arg) {
     TableSP table = createDemoTable(pParam->cLong);
     tableQueue[pParam->index]->push(table);
   }
+
+ //  printf("  gen data Thread  exit ! \n" );
   return NULL;
 }
 
@@ -219,9 +223,9 @@ int main(int argc, char *argv[]) {
   std::thread writeThreads[tLong];
   for (int i = 0; i < tLong; ++i) {
     arg[i].index = i;
-    arg[i].count = tLong;
-    arg[i].nLong = nLong;
-    arg[i].cLong = cLong;
+    arg[i].count = tLong;  // thread num
+    arg[i].nLong = nLong;  //batch  num
+    arg[i].cLong = cLong;  //  records number per threads
     arg[i].nTime = 0;
     genThreads[i] = std::thread(genData, (void *)&arg[i]);
     writeThreads[i] = std::thread(writeData, (void *)&arg[i]);
@@ -236,7 +240,7 @@ int main(int argc, char *argv[]) {
   cout << "Inserted " << rowCount
        << " rows, took a total of  " + std::to_string(endTime - startTime) +
               " ms.  "
-       << rowCount / (endTime - startTime) * 1000 / 10000 << " w/s " << endl;
+       << rowCount / (endTime - startTime) * 1000 *1.0/ 10000 << " w/s " << endl;
   long timeSum = arg[0].nTime;
   for (int i = 1; i < tLong; ++i) {
     timeSum += arg[i].nTime;

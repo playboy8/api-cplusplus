@@ -8,10 +8,46 @@ Byte Order:          Little Endian
 CPU(s):              4
 Model name:          Intel(R) Xeon(R) Platinum 8269CY CPU @ 2.50GHz
 CPU MHz:             2500.002
+MEM: 8G
 
-Test in memory mode
-
+DolphinDB: Test   memory table
 insert 
 collume_size   insert_count   delay_ms_1(逐条插入)   delay_ms_2(批量插入)  
 3                 100W          114594                         
 8                 100W          126924                     
+
+DolphinDB: Test in stream table
+insert 
+collume_size   insert_count   delay_ms_1(逐条插入)   delay_ms_2(批量插入)                         
+22                 100W          279967     
+
+
+
+//////////---------测试2---------------
+Platform:
+
+Architecture:        x86_64
+CPU op-mode(s):      32-bit, 64-bit
+Byte Order:          Little Endian
+CPU(s):              8
+Model name:          Intel(R) Xeon(R) Platinum 8269CY CPU @ 2.50GHz
+CPU MHz:             2500.002
+MEM: 16G
+
+
+
+DolphinDB: Test stream table
+insert 
+collume_size    总条数         每次发送条数  发送线程数    延时ms    吞吐（条/s)   
+22                10W          114594                         
+8                 100W          126924   
+
+
+
+
+
+
+
+
+
+

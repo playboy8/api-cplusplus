@@ -4,6 +4,10 @@ project(API_CXX)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BUILD_DIR})
 set(API_SRC ${CMAKE_CURRENT_SOURCE_DIR})
 
+#openssl 1.0.2
+set(ssl_102  ${CMAKE_CURRENT_SOURCE_DIR}/ssl_1.0.2)
+
+
 #===============================================================
 if (WIN32)
     set(platform_macro "-DWINDOWS")
@@ -23,10 +27,15 @@ elseif(UNIX)
     link_directories(${API_SRC}/bin/linux_x64/ABI0)
 endif ()
 include_directories(${API_SRC}/include)
+include_directories(${ssl_102}/include)
 
-if (EXISTS "/usr/lib/libssl.so.1.0.0") # archlinux
+ 
+
+if (EXISTS "/usr/lib/libssl.so.1.0.0") # archlinux 
     set(LIBSSL /usr/lib/libssl.so.1.0.0)
-else ()
+elseif (EXISTS ${ssl_102}/lib/libssl.so)
+    set(LIBSSL ${ssl_102}/lib/libssl.so)
+else ( )
     set(LIBSSL ssl)
 endif ()
 
@@ -35,6 +44,14 @@ if (WIN32)
 elseif (UNIX)
     set(platform_lib ${LIBSSL})
 endif ()
+
+
+#add_executable( mytest ${API_SRC}/mytest/*.cpp)
+#target_link_libraries(mytest 
+#    DolphinDBAPI 
+#    ${platform_lib} 
+#    pthread 
+#    uuid)
 
 #===============================================================
 macro(TEST module)
@@ -52,3 +69,11 @@ TEST(StreamingThreadedClientTester)
 TEST(StreamingThreadPooledClientTester)
 TEST(DolphinDBTest)
 #TEST(StreamingThreadedClientTester)
+
+
+message(STATUS "\n\
+     info :     ${CMAKE_SOURCE_DIR}\n
+     sources:    ${sources} \n
+     platform_lib: ${platform_lib}\n
+")
+
